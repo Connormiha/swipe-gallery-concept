@@ -42,8 +42,10 @@ function createPost() {
 
   window.addEventListener('resize', () => {
     requestAnimationFrame(() => {
-      photoWidth = wrapper.offsetWidth;
-      stopAndFix();
+      if (photoWidth !== wrapper.offsetWidth) {
+        photoWidth = wrapper.offsetWidth;
+        stopAndFix();
+      }
     });
   });
 
@@ -51,6 +53,11 @@ function createPost() {
     currentSlideIndex = number;
     const prevMoveShift = currentMoveShift;
     currentMoveShift = currentSlideIndex * photoWidth;
+
+    if (prevMoveShift === currentMoveShift) {
+      return;
+    }
+
     const newTransform = `translateX(-${currentMoveShift}px)`;
 
     scroll.animate(
@@ -148,6 +155,7 @@ function createPost() {
       watchMove = false;
       wrapper.removeEventListener('touchmove', onTouchMove);
       wrapper.removeEventListener('touchmove', onFirstTouchMove);
+      setSlideWithAnimate(currentSlideIndex);
       return;
     }
 
@@ -160,8 +168,6 @@ function createPost() {
     if (!watchMove) {
       return;
     }
-
-    const FAST_THERHOLD = 20;
 
     if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
       if (TOUCHES_COORDS_START.x > e.targetTouches[0].clientX) {
