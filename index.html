@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Swipe gallery concept</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper {
+      font-size: 0;
+      max-width: 500px;
+      overflow: hidden;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      user-select: none;
+    }
+
+    .scroll {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .item {
+      background-size: cover;
+      background-position: center;
+      display: inline-block;
+      font-size: 70px;
+      position: relative;
+    }
+    .item > span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50% -50%);
+    }
+
+    .dottes {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+    }
+    .dottes > span {
+      border-radius: 50%;
+      background: #fff;
+      height: 6px;
+      width: 6px;
+      margin: 0 4px;
+      cursor: pointer;
+      opacity: 0.6;
+    }
+
+    .dottes > .active {
+      opacity: 1;
+      transform: scale(1.5);
+      transition: all 0.6s;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="scroll"></div>
+    <div class="dottes"></div>
+  </div>
+
+  <script>
+    const images = ["http://image13.photobiz.com/9919/35_20180517134511_4565348_xlarge.jpg","http://image13.photobiz.com/9923/35_20180517134519_4565350_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182450_4534632_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182452_4534633_xlarge.jpg","http://image13.photobiz.com/9905/35_20180517134502_4565346_xlarge.jpg","http://image11.photobiz.com/3601/35_20170504165252_3906920_xlarge.jpg","http://image8.photobiz.com/5897/35_20180112140440_4392010_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182742_4534638_xlarge.jpg","http://image14.photobiz.com/9253/35_20180517134507_4565347_xlarge.jpg","http://image8.photobiz.com/2937/35_20180112140433_4392009_xlarge.jpg","http://image14.photobiz.com/9328/35_20180517134515_4565349_xlarge.jpg","http://image11.photobiz.com/3669/35_20170504165254_3906921_xlarge.jpg","http://image13.photobiz.com/9244/35_20180517135034_4565351_xlarge.jpg","http://image9.photobiz.com/3179/35_20180112140427_4392008_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182736_4534636_xlarge.jpg","http://image7.photobiz.com/2803/35_20170404163547_3854292_xlarge.jpg"];
+    const wrapper = document.querySelector('.wrapper');
+    const scroll = wrapper.querySelector('.scroll');
+    const $dottes = wrapper.querySelector('.dottes');
+
+    let currentSlideIndex = 0;
+    let photosCount = images.length;
+    let currentMoveShift = 0;
+
+    let photoWidth = wrapper.offsetWidth;
+    let watchMove = false;
+
+    let touchStartPosition = 0;
+
+    window.addEventListener('resize', () => {
+      photoWidth = wrapper.offsetWidth;
+      resizeImages();
+    });
+
+    function setActiveDot() {
+      $dottes.querySelectorAll('span').forEach((item, i) => {
+        item.className = i === currentSlideIndex ? 'active' : '';
+      });
+    }
+
+    function resizeImages() {
+      wrapper.querySelectorAll('.item').forEach((item) => {
+        item.style.width = `${photoWidth}px`;
+        item.style.height = `${photoWidth * 1.4 | 0}px`;
+      });
+    }
+
+    scroll.addEventListener('animationend', () => {
+      watchMove = true;
+    });
+
+    wrapper.addEventListener('touchstart', (e) => {
+      if (watchMove) {
+        return;
+      }
+
+      watchMove = true;
+      touchStartPosition = currentMoveShift + e.touches[0].clientX;
+    });
+
+    wrapper.addEventListener('touchend', (e) => {
+      if (e.touches.length) {
+        return;
+      }
+
+      watchMove = false;
+      const prevMoveShift = currentMoveShift;
+      currentMoveShift = currentSlideIndex * photoWidth;
+      const newTransform = `translateX(-${currentMoveShift}px)`;
+      scroll.animate(
+        [
+          {
+            transform: `translateX(-${prevMoveShift}px)`,
+          },
+          {
+            transform: newTransform,
+          },
+        ],
+        {
+          duration: 300,
+          easing: 'ease-in',
+        }
+      );
+      requestAnimationFrame(() => {
+        scroll.style.transform = newTransform;
+      });
+    });
+
+    wrapper.addEventListener('touchmove', (e) => {
+      if (!watchMove) {
+        return;
+      }
+
+      currentMoveShift = touchStartPosition - e.targetTouches[0].clientX;
+      currentMoveShift = Math.max(0, currentMoveShift);
+      currentMoveShift = Math.min((photosCount - 1) * photoWidth, currentMoveShift);
+      currentSlideIndex = Math.round(currentMoveShift / photoWidth);
+      setActiveDot();
+      scroll.style.transform = `translateX(-${currentMoveShift}px)`;
+    });
+
+    scroll.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
+      const color = `#${(Math.random() * (16 ** 6) | 0).toString(16).padStart(6, '0')}`;
+      const url = `url('${images[i]}')`;
+
+      return `<div class="item" style="background-color:${color};background-image:${url}"><span>${i + 1}</span></div>`;
+    }).join('');
+    resizeImages();
+
+    $dottes.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
+      return `<span></span>`;
+    }).join('');
+    setActiveDot();
+  </script>
+</body>
+</html>
