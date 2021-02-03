@@ -8,11 +8,13 @@ function createPost() {
     <div class="dottes"></div>
     <div class="arrow-left"><</div>
     <div class="arrow-right">></div>
+    <div class="wrapper-scroll-fix"><div></div></div>
   `.trim();
   const scroll = wrapper.querySelector('.scroll');
   const $dottes = wrapper.querySelector('.dottes');
   const $arrowLeft = wrapper.querySelector('.arrow-left');
   const $arrowRight = wrapper.querySelector('.arrow-right');
+  const $scrollFix = wrapper.querySelector('.wrapper-scroll-fix');
   const $html = document.querySelector('html');
 
   $arrowLeft.addEventListener('click', () => {
@@ -106,6 +108,12 @@ function createPost() {
     document.removeEventListener('touchmove', onFirstTouchMove);
     document.removeEventListener('touchmove', onTouchMove);
     $html.classList.remove('disabled-scroll');
+    wrapper.classList.remove('in-touch');
+    $scrollFix.style.display = 'none';
+    requestAnimationFrame(() => {
+      $scrollFix.style.display = 'block';
+    });
+    //$scrollFix.scrollLeft = 100;
   }
 
   function setActiveDot() {
@@ -142,6 +150,7 @@ function createPost() {
   });
 
   const onTouchEnd = (e) => {
+    $scrollFix.style.display = 'block';
     if (e.touches.length || !watchMove) {
       return;
     }
@@ -182,6 +191,7 @@ function createPost() {
       document.removeEventListener('touchmove', onTouchMove);
       document.removeEventListener('touchmove', onFirstTouchMove);
       setSlideWithAnimate(currentSlideIndex);
+      $scrollFix.style.display = 'none';
       return;
     }
 
@@ -190,6 +200,7 @@ function createPost() {
     document.addEventListener('touchmove', onTouchMove);
     document.removeEventListener('touchmove', onFirstTouchMove);
     $html.classList.add('disabled-scroll');
+    //$scrollFix.style.display = 'block';
   };
 
   const onTouchMove = (e) => {
@@ -231,7 +242,21 @@ function createPost() {
         e.preventDefault();
       }
     });
+  } else {
+    $scrollFix.parentNode.removeChild($scrollFix);
   }
+
+  // $scrollFix.addEventListener('wheel', (e) => {
+  //   if (watchMove) {
+  //     e.preventDefault();
+  //   }
+  // });
+
+  // $scrollFix.addEventListener('mousewheel', (e) => {
+  //   if (watchMove) {
+  //     e.preventDefault();
+  //   }
+  // });
 };
 
 images.forEach((url) => {
