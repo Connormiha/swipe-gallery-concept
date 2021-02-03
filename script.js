@@ -16,12 +16,21 @@ function createPost() {
   const $arrowRight = wrapper.querySelector('.arrow-right');
   const $scrollFix = wrapper.querySelector('.wrapper-scroll-fix');
   const $html = document.querySelector('html');
+  let isInAnimation = false;
 
   $arrowLeft.addEventListener('click', () => {
+    if (isInAnimation) {
+      return;
+    }
+
     stopMove();
     setSlideWithAnimate(currentSlideIndex - 1);
   });
   $arrowRight.addEventListener('click', () => {
+    if (isInAnimation) {
+      return;
+    }
+
     stopMove();
     setSlideWithAnimate(currentSlideIndex + 1);
   });
@@ -63,7 +72,7 @@ function createPost() {
 
     const newTransform = `-${currentMoveShift}px`;
 
-    scroll.animate(
+    const animation = scroll.animate(
       [
         {
           left: `-${prevMoveShift}px`,
@@ -80,11 +89,18 @@ function createPost() {
         easing: fast ? 'linear' : 'ease-in',
       }
     );
+
+    animation.onfinish = animation.oncancel = () => {
+      isInAnimation = false;
+    };
+
+    isInAnimation = true;
     requestAnimationFrame(() => {
       scroll.style.left = newTransform;
     });
     setArraws();
     setActiveDot();
+    //scroll.style.left = newTransform;
   }
 
   function setArraws() {
@@ -131,11 +147,11 @@ function createPost() {
     // });
   }
 
-  scroll.addEventListener('animationend', () => {
-    watchMove = true;
-  });
-
   wrapper.addEventListener('touchstart', (e) => {
+    if (isInAnimation) {
+      e.preventDefault();
+    }
+
     if (watchMove) {
       return;
     }
