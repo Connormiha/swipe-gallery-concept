@@ -3,10 +3,22 @@ function createPost() {
   const wrapper = document.createElement('div');
   wrapper.className = 'wrapper';
   wrapper.innerHTML = `
-    <div class="scroll"></div><div class="dottes"></div>
+    <div class="scroll"></div>
+    <div class="dottes"></div>
+    <div class="arrow-left"><</div>
+    <div class="arrow-right">></div>
   `.trim();
   const scroll = wrapper.querySelector('.scroll');
   const $dottes = wrapper.querySelector('.dottes');
+  const $arrowLeft = wrapper.querySelector('.arrow-left');
+  const $arrowRight = wrapper.querySelector('.arrow-right');
+
+  $arrowLeft.addEventListener('click', () => {
+    setSlideWithAnimate(currentSlideIndex - 1);
+  });
+  $arrowRight.addEventListener('click', () => {
+    setSlideWithAnimate(currentSlideIndex + 1);
+  });
 
   document.body.appendChild(wrapper);
 
@@ -24,9 +36,45 @@ function createPost() {
   };
 
   window.addEventListener('resize', () => {
-    photoWidth = wrapper.offsetWidth;
-    stopAndFix();
+    requestAnimationFrame(() => {
+      photoWidth = wrapper.offsetWidth;
+      stopAndFix();
+    });
   });
+
+  function setSlideWithAnimate(number) {
+    currentSlideIndex = number;
+    const prevMoveShift = currentMoveShift;
+    currentMoveShift = currentSlideIndex * photoWidth;
+    const newTransform = `translateX(-${currentMoveShift}px)`;
+
+    scroll.animate(
+      [
+        {
+          transform: `translateX(-${prevMoveShift}px)`,
+        },
+        {
+          transform: newTransform,
+        },
+      ],
+      {
+        duration: Math.min(
+          (Math.max(prevMoveShift, currentMoveShift) - Math.min(prevMoveShift, currentMoveShift)) * 3,
+          300,
+        ),
+        easing: 'ease-in',
+      }
+    );
+    requestAnimationFrame(() => {
+      scroll.style.transform = newTransform;
+    });
+    setArraws();
+  }
+
+  function setArraws() {
+    $arrowLeft.classList.toggle('arrow-active', currentSlideIndex > 0);
+    $arrowRight.classList.toggle('arrow-active', currentSlideIndex < photosCount - 1);
+  }
 
   function stopAndFix() {
     resizeImages();
@@ -37,6 +85,7 @@ function createPost() {
     currentMoveShift = currentSlideIndex * photoWidth;
     const newTransform = `translateX(-${currentMoveShift}px)`;
     scroll.style.transform = newTransform;
+    setArraws();
   }
 
   function setActiveDot() {
@@ -75,30 +124,7 @@ function createPost() {
 
     watchMove = false;
     wrapper.removeEventListener('touchmove', onTouchMove);
-    const prevMoveShift = currentMoveShift;
-    currentMoveShift = currentSlideIndex * photoWidth;
-    const newTransform = `translateX(-${currentMoveShift}px)`;
-
-    scroll.animate(
-      [
-        {
-          transform: `translateX(-${prevMoveShift}px)`,
-        },
-        {
-          transform: newTransform,
-        },
-      ],
-      {
-        duration: Math.min(
-          (Math.max(prevMoveShift, currentMoveShift) - Math.min(prevMoveShift, currentMoveShift)) * 3,
-          300,
-        ),
-        easing: 'ease-in',
-      }
-    );
-    requestAnimationFrame(() => {
-      scroll.style.transform = newTransform;
-    });
+    setSlideWithAnimate(currentSlideIndex);
   });
 
   const onFirstTouchMove = (e) => {
@@ -147,12 +173,7 @@ function createPost() {
   }).join('');
   setActiveDot();
 
-  // wrapper.addEventListener('wheel', (event) =>{
-  //   console.log(event);
-  //   if (watchMove) {
-  //     event.preventDefault();
-  //   }
-  // });
+  setArraws();
 };
 
 createPost();
