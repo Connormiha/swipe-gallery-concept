@@ -54,9 +54,12 @@ body {
   background-color: #ccc;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   font-size: 70px;
+  height: inherit;
   position: relative;
   flex: 1;
+  pointer-events: none;
 }
 .item > span {
   background: rgba(255, 255, 255, 0.3);

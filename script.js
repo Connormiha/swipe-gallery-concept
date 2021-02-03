@@ -123,11 +123,12 @@ function createPost() {
   }
 
   function resizeImages() {
-    scroll.style.width = `${photoWidth * photosCount}px`
-    wrapper.querySelectorAll('.item').forEach((item) => {
-      //item.style.width = `${photoWidth}px`;
-      item.style.height = `${photoWidth * 1.4 | 0}px`;
-    });
+    scroll.style.width = `${photoWidth * photosCount}px`;
+    scroll.style.height = `${photoWidth * 1.4 | 0}px`;
+    // wrapper.querySelectorAll('.item').forEach((item) => {
+    //   //item.style.width = `${photoWidth}px`;
+    //   item.style.height = `${photoWidth * 1.4 | 0}px`;
+    // });
   }
 
   scroll.addEventListener('animationend', () => {
