@@ -15,10 +15,14 @@ function createPost() {
   const $arrowRight = wrapper.querySelector('.arrow-right');
 
   $arrowLeft.addEventListener('click', () => {
+    stopMove();
     setSlideWithAnimate(currentSlideIndex - 1);
+    setActiveDot();
   });
   $arrowRight.addEventListener('click', () => {
+    stopMove();
     setSlideWithAnimate(currentSlideIndex + 1);
+    setActiveDot();
   });
 
   document.body.appendChild(wrapper);
@@ -190,10 +194,9 @@ function createPost() {
   };
 
   scroll.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
-    const color = `#${(Math.random() * (16 ** 6) | 0).toString(16).padStart(6, '0')}`;
     const url = `url('${images[i]}')`;
 
-    return `<div class="item" style="background-color:${color};background-image:${url}"><span>${i + 1}</span></div>`;
+    return `<div class="item" style="background-image:${url}"><span>${i + 1}</span></div>`;
   }).join('');
   resizeImages();
 
@@ -205,11 +208,13 @@ function createPost() {
   setArraws();
 };
 
-createPost();
-createPost();
-createPost();
-
 images.forEach((url) => {
   const img = document.createElement('img');
   img.src = url;
+});
+
+requestAnimationFrame(() => {
+  createPost();
+  createPost();
+  createPost();
 });
