@@ -13,6 +13,7 @@ function createPost() {
   const $dottes = wrapper.querySelector('.dottes');
   const $arrowLeft = wrapper.querySelector('.arrow-left');
   const $arrowRight = wrapper.querySelector('.arrow-right');
+  const $html = document.querySelector('html');
 
   $arrowLeft.addEventListener('click', () => {
     stopMove();
@@ -104,6 +105,7 @@ function createPost() {
     document.removeEventListener('touchend', onTouchEnd);
     document.removeEventListener('touchmove', onFirstTouchMove);
     document.removeEventListener('touchmove', onTouchMove);
+    $html.classList.remove('disabled-scroll');
   }
 
   function setActiveDot() {
@@ -191,6 +193,7 @@ function createPost() {
     onTouchMove(e);
     document.addEventListener('touchmove', onTouchMove);
     document.removeEventListener('touchmove', onFirstTouchMove);
+    $html.classList.add('disabled-scroll');
   };
 
   const onTouchMove = (e) => {
@@ -233,6 +236,9 @@ images.forEach((url) => {
 });
 
 requestAnimationFrame(() => {
+  createPost();
+  createPost();
+  createPost();
   createPost();
   createPost();
   createPost();
