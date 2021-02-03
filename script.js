@@ -101,9 +101,9 @@ function createPost() {
 
   function stopMove() {
     watchMove = false;
-    wrapper.removeEventListener('touchend', onTouchEnd);
-    wrapper.removeEventListener('touchmove', onFirstTouchMove);
-    wrapper.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', onTouchEnd);
+    document.removeEventListener('touchmove', onFirstTouchMove);
+    document.removeEventListener('touchmove', onTouchMove);
   }
 
   function setActiveDot() {
@@ -135,8 +135,8 @@ function createPost() {
     TOUCHES_COORDS_START.x = e.touches[0].clientX;
     TOUCHES_COORDS_START.y = e.touches[0].clientY;
     TOUCHES_COORDS_START.ts = e.timeStamp;
-    wrapper.addEventListener('touchend', onTouchEnd);
-    wrapper.addEventListener('touchmove', onFirstTouchMove);
+    document.addEventListener('touchend', onTouchEnd);
+    document.addEventListener('touchmove', onFirstTouchMove);
   });
 
   const onTouchEnd = (e) => {
@@ -183,15 +183,15 @@ function createPost() {
       )
     ) {
       watchMove = false;
-      wrapper.removeEventListener('touchmove', onTouchMove);
-      wrapper.removeEventListener('touchmove', onFirstTouchMove);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchmove', onFirstTouchMove);
       setSlideWithAnimate(currentSlideIndex);
       return;
     }
 
     watchMove = true;
     onTouchMove(e);
-    wrapper.addEventListener('touchmove', onTouchMove);
+    document.addEventListener('touchmove', onTouchMove);
   };
 
   const onTouchMove = (e) => {
