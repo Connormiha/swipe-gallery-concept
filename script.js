@@ -123,8 +123,9 @@ function createPost() {
   }
 
   function resizeImages() {
+    scroll.style.width = `${photoWidth * photosCount}px`
     wrapper.querySelectorAll('.item').forEach((item) => {
-      item.style.width = `${photoWidth}px`;
+      //item.style.width = `${photoWidth}px`;
       item.style.height = `${photoWidth * 1.4 | 0}px`;
     });
   }
@@ -245,18 +246,6 @@ function createPost() {
   } else {
     $scrollFix.parentNode.removeChild($scrollFix);
   }
-
-  // $scrollFix.addEventListener('wheel', (e) => {
-  //   if (watchMove) {
-  //     e.preventDefault();
-  //   }
-  // });
-
-  // $scrollFix.addEventListener('mousewheel', (e) => {
-  //   if (watchMove) {
-  //     e.preventDefault();
-  //   }
-  // });
 };
 
 images.forEach((url) => {

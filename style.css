@@ -1,7 +1,7 @@
-/* .disabled-scroll {
+.disabled-scroll {
   overflow: hidden;
 }
-
+/*
 .disabled-scroll body {
   overflow: hidden;
   overscroll-behavior-y: contain;
@@ -45,9 +45,8 @@ body {
 }
 
 .scroll {
-  display: inline-block;
+  display: flex;
   overflow: hidden;
-  white-space: nowrap;
   position: relative;
 }
 
@@ -55,9 +54,9 @@ body {
   background-color: #ccc;
   background-size: cover;
   background-position: center;
-  display: inline-block;
   font-size: 70px;
   position: relative;
+  flex: 1;
 }
 .item > span {
   background: rgba(255, 255, 255, 0.3);
