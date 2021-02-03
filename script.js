@@ -144,8 +144,6 @@ function createPost() {
       return;
     }
 
-    e.preventDefault();
-
     if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
       if (TOUCHES_COORDS_START.x > lastTouchX) {
         const diff = TOUCHES_COORDS_START.x - lastTouchX;
