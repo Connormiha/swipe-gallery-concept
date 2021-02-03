@@ -207,6 +207,10 @@ function createPost() {
 
     setActiveDot();
     scroll.style.left = `-${currentMoveShift}px`;
+
+    if (e.defaultPrevented) {
+      e.preventDefault();
+    }
   };
 
   scroll.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
