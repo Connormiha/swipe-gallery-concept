@@ -7,11 +7,15 @@
   overscroll-behavior-y: contain;
 } */
 
+html {
+  overscroll-behavior-x: none;
+}
+
 body {
   margin: 0;
   padding: 0;
   color: #000;
-  overscroll-behavior-x: contain;
+  overscroll-behavior-x: none;
 }
 
 .wrapper {

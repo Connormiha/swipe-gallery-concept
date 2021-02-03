@@ -230,6 +230,8 @@ function createPost() {
     const maxRight = (photosCount - 1) * photoWidth;
     //currentMoveShift = Math.max(-photoWidth / 2, currentMoveShift);
     if (currentMoveShift < 0) {
+      const track = 100 / photoWidth * Math.abs(currentMoveShift);
+      console.log(Math.max(0.5 - track / 100, 0));
       const power = 0.4;
       currentMoveShift = currentMoveShift * power;
     } else if (currentMoveShift > maxRight) {
