@@ -136,7 +136,6 @@ function createPost() {
     touchStartPosition = currentMoveShift + e.touches[0].clientX;
     TOUCHES_COORDS_START.x = e.touches[0].clientX;
     TOUCHES_COORDS_START.y = e.touches[0].clientY;
-    TOUCHES_COORDS_START.ts = e.timeStamp;
     document.addEventListener('touchend', onTouchEnd);
     document.addEventListener('touchmove', onFirstTouchMove);
   });
@@ -146,27 +145,25 @@ function createPost() {
       return;
     }
 
-    if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
-      if (TOUCHES_COORDS_START.x > lastTouchX) {
-        const diff = TOUCHES_COORDS_START.x - lastTouchX;
+    if (TOUCHES_COORDS_START.x > lastTouchX) {
+      const diff = TOUCHES_COORDS_START.x - lastTouchX;
 
-        if (diff > photoWidth / 4) {
-          stopMove();
-          setSlideWithAnimate(
-            currentSlideIndex < photosCount - 1 ? Math.min(currentSlideIndex + 1, startSlideIndex + 1) : currentSlideIndex, { fast: true }
-          );
-          return;
-        }
-      } else if (TOUCHES_COORDS_START.x < lastTouchX) {
-        const diff = lastTouchX - TOUCHES_COORDS_START.x;
+      if (diff > photoWidth / 3) {
+        stopMove();
+        setSlideWithAnimate(
+          currentSlideIndex < photosCount - 1 ? Math.min(currentSlideIndex + 1, startSlideIndex + 1) : currentSlideIndex, { fast: true }
+        );
+        return;
+      }
+    } else if (TOUCHES_COORDS_START.x < lastTouchX) {
+      const diff = lastTouchX - TOUCHES_COORDS_START.x;
 
-        if (diff > photoWidth / 4) {
-          stopMove();
-          setSlideWithAnimate(
-            currentSlideIndex > 0 ? Math.max(currentSlideIndex - 1, startSlideIndex - 1) : 0, { fast: true }
-          );
-          return;
-        }
+      if (diff > photoWidth / 3) {
+        stopMove();
+        setSlideWithAnimate(
+          currentSlideIndex > 0 ? Math.max(currentSlideIndex - 1, startSlideIndex - 1) : 0, { fast: true }
+        );
+        return;
       }
     }
 
