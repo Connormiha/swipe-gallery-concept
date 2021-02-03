@@ -79,13 +79,17 @@ function createPost() {
   function stopAndFix() {
     resizeImages();
     setActiveDot();
-    watchMove = false;
-    wrapper.removeEventListener('touchmove', onFirstTouchMove);
-    wrapper.removeEventListener('touchmove', onTouchMove);
+    stopMove();
     currentMoveShift = currentSlideIndex * photoWidth;
     const newTransform = `translateX(-${currentMoveShift}px)`;
     scroll.style.transform = newTransform;
     setArraws();
+  }
+
+  function stopMove() {
+    watchMove = false;
+    wrapper.removeEventListener('touchmove', onFirstTouchMove);
+    wrapper.removeEventListener('touchmove', onTouchMove);
   }
 
   function setActiveDot() {
@@ -114,6 +118,7 @@ function createPost() {
     touchStartPosition = currentMoveShift + e.touches[0].clientX;
     TOUCHES_COORDS_START.x = e.touches[0].clientX;
     TOUCHES_COORDS_START.y = e.touches[0].clientY;
+    TOUCHES_COORDS_START.ts = e.timeStamp;
     wrapper.addEventListener('touchmove', onFirstTouchMove);
   });
 
@@ -151,7 +156,30 @@ function createPost() {
       return;
     }
 
+    const FAST_THERHOLD = 20;
+
+    if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
+      if (TOUCHES_COORDS_START.x > e.targetTouches[0].clientX) {
+        const diff = TOUCHES_COORDS_START.x - e.targetTouches[0].clientX;
+
+        if (diff > photoWidth / 3) {
+          stopMove();
+          setSlideWithAnimate(currentSlideIndex < photosCount - 1 ? currentSlideIndex + 1 : currentSlideIndex);
+          return;
+        }
+      } else if (TOUCHES_COORDS_START.x < e.targetTouches[0].clientX) {
+        const diff = e.targetTouches[0].clientX - TOUCHES_COORDS_START.x;
+
+        if (diff > photoWidth / 3) {
+          stopMove();
+          setSlideWithAnimate(currentSlideIndex > 0 ? currentSlideIndex - 1 : 0);
+          return;
+        }
+      }
+    }
+
     currentMoveShift = touchStartPosition - e.targetTouches[0].clientX;
+    lastTouchX = e.targetTouches[0].clientX;
     currentMoveShift = Math.max(0, currentMoveShift);
     currentMoveShift = Math.min((photosCount - 1) * photoWidth, currentMoveShift);
     currentSlideIndex = Math.round(currentMoveShift / photoWidth);
