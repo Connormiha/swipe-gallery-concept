@@ -49,7 +49,10 @@ function createPost() {
     });
   });
 
-  function setSlideWithAnimate(number, fast) {
+  let startSlideIndex = 0;
+
+  function setSlideWithAnimate(number, { fast } = {}) {
+    console.log({number});
     currentSlideIndex = number;
     const prevMoveShift = currentMoveShift;
     currentMoveShift = currentSlideIndex * photoWidth;
@@ -127,6 +130,8 @@ function createPost() {
     }
 
     watchMove = true;
+    startSlideIndex = currentSlideIndex;
+    lastTouchX = e.touches[0].clientX;
     touchStartPosition = currentMoveShift + e.touches[0].clientX;
     TOUCHES_COORDS_START.x = e.touches[0].clientX;
     TOUCHES_COORDS_START.y = e.touches[0].clientY;
@@ -139,8 +144,33 @@ function createPost() {
       return;
     }
 
-    watchMove = false;
-    wrapper.removeEventListener('touchmove', onTouchMove);
+    e.preventDefault();
+
+    if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
+      if (TOUCHES_COORDS_START.x > lastTouchX) {
+        const diff = TOUCHES_COORDS_START.x - lastTouchX;
+
+        if (diff > photoWidth / 4) {
+          stopMove();
+          setSlideWithAnimate(
+            currentSlideIndex < photosCount - 1 ? Math.min(currentSlideIndex + 1, startSlideIndex + 1) : currentSlideIndex, { fast: true }
+          );
+          return;
+        }
+      } else if (TOUCHES_COORDS_START.x < lastTouchX) {
+        const diff = lastTouchX - TOUCHES_COORDS_START.x;
+
+        if (diff > photoWidth / 4) {
+          stopMove();
+          setSlideWithAnimate(
+            currentSlideIndex > 0 ? Math.max(currentSlideIndex - 1, startSlideIndex - 1) : 0, { fast: true }
+          );
+          return;
+        }
+      }
+    }
+
+    stopMove();
     setSlideWithAnimate(currentSlideIndex);
   });
 
@@ -169,31 +199,12 @@ function createPost() {
       return;
     }
 
-    if (e.timeStamp - TOUCHES_COORDS_START.ts < 300) {
-      if (TOUCHES_COORDS_START.x > e.targetTouches[0].clientX) {
-        const diff = TOUCHES_COORDS_START.x - e.targetTouches[0].clientX;
-
-        if (diff > photoWidth / 4) {
-          stopMove();
-          setSlideWithAnimate(currentSlideIndex < photosCount - 1 ? currentSlideIndex + 1 : currentSlideIndex, true);
-          return;
-        }
-      } else if (TOUCHES_COORDS_START.x < e.targetTouches[0].clientX) {
-        const diff = e.targetTouches[0].clientX - TOUCHES_COORDS_START.x;
-
-        if (diff > photoWidth / 4) {
-          stopMove();
-          setSlideWithAnimate(currentSlideIndex > 0 ? currentSlideIndex - 1 : 0, true);
-          return;
-        }
-      }
-    }
-
     currentMoveShift = touchStartPosition - e.targetTouches[0].clientX;
     lastTouchX = e.targetTouches[0].clientX;
     currentMoveShift = Math.max(0, currentMoveShift);
     currentMoveShift = Math.min((photosCount - 1) * photoWidth, currentMoveShift);
     currentSlideIndex = Math.round(currentMoveShift / photoWidth);
+
     setActiveDot();
     scroll.style.transform = `translateX(-${currentMoveShift}px)`;
     e.preventDefault();
