@@ -206,7 +206,7 @@ function createPost() {
     currentSlideIndex = Math.round(currentMoveShift / photoWidth);
 
     setActiveDot();
-    scroll.style.transform = `-${currentMoveShift}px`;
+    scroll.style.left = `-${currentMoveShift}px`;
   };
 
   scroll.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
