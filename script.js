@@ -1,5 +1,6 @@
+const images = ["http://image13.photobiz.com/9919/35_20180517134511_4565348_xlarge.jpg","http://image13.photobiz.com/9923/35_20180517134519_4565350_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182450_4534632_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182452_4534633_xlarge.jpg","http://image13.photobiz.com/9905/35_20180517134502_4565346_xlarge.jpg","http://image11.photobiz.com/3601/35_20170504165252_3906920_xlarge.jpg","http://image8.photobiz.com/5897/35_20180112140440_4392010_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182742_4534638_xlarge.jpg","http://image14.photobiz.com/9253/35_20180517134507_4565347_xlarge.jpg","http://image8.photobiz.com/2937/35_20180112140433_4392009_xlarge.jpg","http://image14.photobiz.com/9328/35_20180517134515_4565349_xlarge.jpg","http://image11.photobiz.com/3669/35_20170504165254_3906921_xlarge.jpg","http://image13.photobiz.com/9244/35_20180517135034_4565351_xlarge.jpg","http://image9.photobiz.com/3179/35_20180112140427_4392008_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182736_4534636_xlarge.jpg","http://image7.photobiz.com/2803/35_20170404163547_3854292_xlarge.jpg"];
+
 function createPost() {
-  const images = ["http://image13.photobiz.com/9919/35_20180517134511_4565348_xlarge.jpg","http://image13.photobiz.com/9923/35_20180517134519_4565350_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182450_4534632_xlarge.jpg","http://image14.photobiz.com/10132/35_20180425182452_4534633_xlarge.jpg","http://image13.photobiz.com/9905/35_20180517134502_4565346_xlarge.jpg","http://image11.photobiz.com/3601/35_20170504165252_3906920_xlarge.jpg","http://image8.photobiz.com/5897/35_20180112140440_4392010_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182742_4534638_xlarge.jpg","http://image14.photobiz.com/9253/35_20180517134507_4565347_xlarge.jpg","http://image8.photobiz.com/2937/35_20180112140433_4392009_xlarge.jpg","http://image14.photobiz.com/9328/35_20180517134515_4565349_xlarge.jpg","http://image11.photobiz.com/3669/35_20170504165254_3906921_xlarge.jpg","http://image13.photobiz.com/9244/35_20180517135034_4565351_xlarge.jpg","http://image9.photobiz.com/3179/35_20180112140427_4392008_xlarge.jpg","http://image13.photobiz.com/10133/35_20180425182736_4534636_xlarge.jpg","http://image7.photobiz.com/2803/35_20170404163547_3854292_xlarge.jpg"];
   const wrapper = document.createElement('div');
   wrapper.className = 'wrapper';
   wrapper.innerHTML = `
@@ -207,3 +208,8 @@ function createPost() {
 createPost();
 createPost();
 createPost();
+
+images.forEach((url) => {
+  const img = document.createElement('img');
+  img.src = url;
+});
