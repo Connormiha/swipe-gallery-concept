@@ -72,7 +72,7 @@ function createPost() {
       ],
       {
         duration: fast ? 150 : Math.min(
-          (Math.max(prevMoveShift, currentMoveShift) - Math.min(prevMoveShift, currentMoveShift)) * 4,
+          (Math.max(prevMoveShift, currentMoveShift) - Math.min(prevMoveShift, currentMoveShift)) * 1.5,
           300,
         ),
         easing: fast ? 'linear' : 'ease-in',
@@ -224,6 +224,14 @@ function createPost() {
   setActiveDot();
 
   setArraws();
+
+  wrapper.addEventListener('touchstart', (e) => {
+    // is not near edge of view, exit
+    if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
+
+    // prevent swipe to navigate gesture
+    e.preventDefault();
+  });
 };
 
 images.forEach((url) => {
