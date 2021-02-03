@@ -225,13 +225,13 @@ function createPost() {
 
   setArraws();
 
-  wrapper.addEventListener('touchstart', (e) => {
-    // is not near edge of view, exit
-    if (e.pageX > 10 && e.pageX < window.innerWidth - 10) return;
-
-    // prevent swipe to navigate gesture
-    e.preventDefault();
-  });
+  if (/iphone|ipad/i.test(navigator.userAgent)) {
+    wrapper.addEventListener('touchstart', (e) => {
+      if (!(e.pageX > 10 && e.pageX < window.innerWidth - 10)) {
+        e.preventDefault();
+      }
+    });
+  }
 };
 
 images.forEach((url) => {
