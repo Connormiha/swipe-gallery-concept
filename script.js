@@ -49,7 +49,7 @@ function createPost() {
     });
   });
 
-  function setSlideWithAnimate(number) {
+  function setSlideWithAnimate(number, fast) {
     currentSlideIndex = number;
     const prevMoveShift = currentMoveShift;
     currentMoveShift = currentSlideIndex * photoWidth;
@@ -70,11 +70,11 @@ function createPost() {
         },
       ],
       {
-        duration: Math.min(
+        duration: fast ? 150 : Math.min(
           (Math.max(prevMoveShift, currentMoveShift) - Math.min(prevMoveShift, currentMoveShift)) * 3,
           300,
         ),
-        easing: 'ease-in',
+        easing: fast ? 'linear' : 'ease-in',
       }
     );
     requestAnimationFrame(() => {
@@ -173,17 +173,17 @@ function createPost() {
       if (TOUCHES_COORDS_START.x > e.targetTouches[0].clientX) {
         const diff = TOUCHES_COORDS_START.x - e.targetTouches[0].clientX;
 
-        if (diff > photoWidth / 3) {
+        if (diff > photoWidth / 4) {
           stopMove();
-          setSlideWithAnimate(currentSlideIndex < photosCount - 1 ? currentSlideIndex + 1 : currentSlideIndex);
+          setSlideWithAnimate(currentSlideIndex < photosCount - 1 ? currentSlideIndex + 1 : currentSlideIndex, true);
           return;
         }
       } else if (TOUCHES_COORDS_START.x < e.targetTouches[0].clientX) {
         const diff = e.targetTouches[0].clientX - TOUCHES_COORDS_START.x;
 
-        if (diff > photoWidth / 3) {
+        if (diff > photoWidth / 4) {
           stopMove();
-          setSlideWithAnimate(currentSlideIndex > 0 ? currentSlideIndex - 1 : 0);
+          setSlideWithAnimate(currentSlideIndex > 0 ? currentSlideIndex - 1 : 0, true);
           return;
         }
       }
