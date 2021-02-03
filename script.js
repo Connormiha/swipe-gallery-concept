@@ -70,12 +70,11 @@ function createPost() {
       return;
     }
 
-    const newTransform = `-${currentMoveShift}px`;
-
+    const newTransform = `${-currentMoveShift}px`;
     const animation = scroll.animate(
       [
         {
-          left: `-${prevMoveShift}px`,
+          left: `${-prevMoveShift}px`,
         },
         {
           left: newTransform,
@@ -228,12 +227,23 @@ function createPost() {
 
     currentMoveShift = touchStartPosition - e.targetTouches[0].clientX;
     lastTouchX = e.targetTouches[0].clientX;
-    currentMoveShift = Math.max(0, currentMoveShift);
-    currentMoveShift = Math.min((photosCount - 1) * photoWidth, currentMoveShift);
+    const maxRight = (photosCount - 1) * photoWidth;
+    //currentMoveShift = Math.max(-photoWidth / 2, currentMoveShift);
+    if (currentMoveShift < 0) {
+      const power = 0.4;
+      currentMoveShift = currentMoveShift * power;
+    } else if (currentMoveShift > maxRight) {
+      const power = 0.4;
+      currentMoveShift -= ((currentMoveShift - maxRight) * power);
+    }
+    //currentMoveShift = Math.min((photosCount - 1) * photoWidth, currentMoveShift);
+    // console.log(currentMoveShift, photoWidth * -0.9);
+    // currentMoveShift = Math.max(currentMoveShift, currentMoveShift, photoWidth * -0.9);
     currentSlideIndex = Math.round(currentMoveShift / photoWidth);
+    currentSlideIndex = Math.min(Math.max(currentSlideIndex, 0), photosCount - 1);
 
     setActiveDot();
-    scroll.style.left = `-${currentMoveShift}px`;
+    scroll.style.left = `${-currentMoveShift}px`;
 
     if (e.defaultPrevented) {
       e.preventDefault();

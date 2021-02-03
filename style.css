@@ -15,6 +15,7 @@ body {
 }
 
 .wrapper {
+  background: #ccc;;
   font-size: 0;
   max-width: 500px;
   overflow: hidden;;
