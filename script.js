@@ -17,12 +17,10 @@ function createPost() {
   $arrowLeft.addEventListener('click', () => {
     stopMove();
     setSlideWithAnimate(currentSlideIndex - 1);
-    setActiveDot();
   });
   $arrowRight.addEventListener('click', () => {
     stopMove();
     setSlideWithAnimate(currentSlideIndex + 1);
-    setActiveDot();
   });
 
   document.body.appendChild(wrapper);
@@ -52,7 +50,6 @@ function createPost() {
   let startSlideIndex = 0;
 
   function setSlideWithAnimate(number, { fast } = {}) {
-    console.log({number});
     currentSlideIndex = number;
     const prevMoveShift = currentMoveShift;
     currentMoveShift = currentSlideIndex * photoWidth;
@@ -84,6 +81,7 @@ function createPost() {
       scroll.style.transform = newTransform;
     });
     setArraws();
+    setActiveDot();
   }
 
   function setArraws() {
@@ -103,6 +101,7 @@ function createPost() {
 
   function stopMove() {
     watchMove = false;
+    wrapper.removeEventListener('touchend', onTouchEnd);
     wrapper.removeEventListener('touchmove', onFirstTouchMove);
     wrapper.removeEventListener('touchmove', onTouchMove);
   }
@@ -136,10 +135,11 @@ function createPost() {
     TOUCHES_COORDS_START.x = e.touches[0].clientX;
     TOUCHES_COORDS_START.y = e.touches[0].clientY;
     TOUCHES_COORDS_START.ts = e.timeStamp;
+    wrapper.addEventListener('touchend', onTouchEnd);
     wrapper.addEventListener('touchmove', onFirstTouchMove);
   });
 
-  wrapper.addEventListener('touchend', (e) => {
+  const onTouchEnd = (e) => {
     if (e.touches.length || !watchMove) {
       return;
     }
@@ -172,7 +172,7 @@ function createPost() {
 
     stopMove();
     setSlideWithAnimate(currentSlideIndex);
-  });
+  };
 
   const onFirstTouchMove = (e) => {
     if (
