@@ -190,6 +190,7 @@ function createPost() {
     watchMove = true;
     onTouchMove(e);
     document.addEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchmove', onFirstTouchMove);
   };
 
   const onTouchMove = (e) => {
