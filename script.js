@@ -58,15 +58,15 @@ function createPost() {
       return;
     }
 
-    const newTransform = `translateX(-${currentMoveShift}px)`;
+    const newTransform = `-${currentMoveShift}px`;
 
     scroll.animate(
       [
         {
-          transform: `translateX(-${prevMoveShift}px)`,
+          left: `-${prevMoveShift}px`,
         },
         {
-          transform: newTransform,
+          left: newTransform,
         },
       ],
       {
@@ -78,7 +78,7 @@ function createPost() {
       }
     );
     requestAnimationFrame(() => {
-      scroll.style.transform = newTransform;
+      scroll.style.left = newTransform;
     });
     setArraws();
     setActiveDot();
@@ -94,8 +94,8 @@ function createPost() {
     setActiveDot();
     stopMove();
     currentMoveShift = currentSlideIndex * photoWidth;
-    const newTransform = `translateX(-${currentMoveShift}px)`;
-    scroll.style.transform = newTransform;
+    const newTransform = `-${currentMoveShift}px`;
+    scroll.style.left = newTransform;
     setArraws();
   }
 
@@ -206,8 +206,7 @@ function createPost() {
     currentSlideIndex = Math.round(currentMoveShift / photoWidth);
 
     setActiveDot();
-    scroll.style.transform = `translateX(-${currentMoveShift}px)`;
-    e.preventDefault();
+    scroll.style.transform = `-${currentMoveShift}px`;
   };
 
   scroll.innerHTML = Array.from({ length: photosCount }).map((_, i) => {
