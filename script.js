@@ -148,7 +148,7 @@ function createPost() {
     if (TOUCHES_COORDS_START.x > lastTouchX) {
       const diff = TOUCHES_COORDS_START.x - lastTouchX;
 
-      if (diff > photoWidth / 3) {
+      if (diff > photoWidth / 4) {
         stopMove();
         setSlideWithAnimate(
           currentSlideIndex < photosCount - 1 ? Math.min(currentSlideIndex + 1, startSlideIndex + 1) : currentSlideIndex, { fast: true }
@@ -158,7 +158,7 @@ function createPost() {
     } else if (TOUCHES_COORDS_START.x < lastTouchX) {
       const diff = lastTouchX - TOUCHES_COORDS_START.x;
 
-      if (diff > photoWidth / 3) {
+      if (diff > photoWidth / 4) {
         stopMove();
         setSlideWithAnimate(
           currentSlideIndex > 0 ? Math.max(currentSlideIndex - 1, startSlideIndex - 1) : 0, { fast: true }
