@@ -8,7 +8,7 @@ function createPost() {
     <div class="dottes"></div>
     <div class="arrow-left"><</div>
     <div class="arrow-right">></div>
-    <div class="wrapper-scroll-fix"><div></div></div>
+    <div class="wrapper-scroll-fix"></div>
   `.trim();
   const scroll = wrapper.querySelector('.scroll');
   const $dottes = wrapper.querySelector('.dottes');
